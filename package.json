@@ -1,0 +1,29 @@
+{
+  "name": "js_hair_gpgpu_pbd",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "vite.config.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "keywords": [
+    "JS",
+    "Fur",
+    "Hair",
+    "GPGPU",
+    "PBD"
+  ],
+  "author": "Mohsen Afshari",
+  "license": "ISC",
+  "dependencies": {
+    "lil-gui": "^0.21.0",
+    "three": "^0.182.0"
+  },
+  "devDependencies": {
+    "vite": "^7.2.7",
+    "vite-plugin-glsl": "^1.5.5",
+    "vite-plugin-restart": "^2.0.0"
+  }
+}
