@@ -18,8 +18,8 @@
   "author": "Mohsen Afshari",
   "license": "ISC",
   "dependencies": {
-    "lil-gui": "^0.21.0",
-    "three": "^0.182.0"
+    "lil-gui": "^0.20.0",
+    "three": "^0.174.0"
   },
   "devDependencies": {
     "vite": "^7.2.7",
