@@ -1,9 +1,13 @@
 
 import * as THREE from 'three'
 
-function draw_plane(pWidth, pHeight, zFrontWorld) {
+// [ ] - Add labels for strands & particles in lil-gui
+// [ ] - limit framerate
+// [ ] - Add text for help/guide in lil-gui
 
-    const geometry = new THREE.PlaneGeometry(pWidth, pHeight); // width, height
+function draw_plane(p_width, p_height, z_front_world) {
+
+    const geometry = new THREE.PlaneGeometry(p_width, p_height); // width, height
     const material = new THREE.MeshStandardMaterial({
         color: 0xffffff,
         side: THREE.DoubleSide,
@@ -12,44 +16,44 @@ function draw_plane(pWidth, pHeight, zFrontWorld) {
     });
 
     let ref_plane = new THREE.Mesh(geometry, material);
-    ref_plane.position.z = zFrontWorld
+    ref_plane.position.z = z_front_world
     return ref_plane
 }
 
 export function add_box_random_points(num_strands) {
-    const boxWidth = 4;
-    const boxHeight = 5;
-    const boxDepth = 1;
+    const box_width = 4;
+    const box_height = 5;
+    const box_depth = 1;
 
-    const boxGeo = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
-    const boxMat = new THREE.MeshStandardMaterial({
+    const box_geo = new THREE.BoxGeometry(box_width, box_height, box_depth);
+    const box_mat = new THREE.MeshStandardMaterial({
         color: 0x156289,
         metalness: 0.2,
         roughness: 0.7,
         wireframe: true
     });
 
-    let boxMesh = new THREE.Mesh(boxGeo, boxMat);
-    boxMesh.position.set(0, 0, 0);
-    boxMesh.visible = false;
+    let box_mesh = new THREE.Mesh(box_geo, box_mat);
+    box_mesh.position.set(0, 0, 0);
+    box_mesh.visible = false;
 
-    boxGeo.computeBoundingBox();
-    const bb = boxGeo.boundingBox;
+    box_geo.computeBoundingBox();
+    const bb = box_geo.boundingBox;
 
-    const zFrontLocal = bb.max.z;
-    const zFrontWorld = zFrontLocal + boxMesh.position.z;
+    const z_front_local = bb.max.z;
+    const z_front_world = z_front_local + box_mesh.position.z;
 
-    const xMin = bb.min.x + boxMesh.position.x;
-    const xMax = bb.max.x + boxMesh.position.x;
-    const yMin = bb.min.y + boxMesh.position.y;
-    const yMax = bb.max.y + boxMesh.position.y;
+    const x_min = bb.min.x + box_mesh.position.x;
+    const x_max = bb.max.x + box_mesh.position.x;
+    const y_min = bb.min.y + box_mesh.position.y;
+    const y_max = bb.max.y + box_mesh.position.y;
 
     const points = [];
 
     for (let i = 0; i < num_strands; i++) {
-        const x = THREE.MathUtils.lerp(xMin, xMax, Math.random());
-        const z = zFrontWorld;
-        const y = THREE.MathUtils.lerp(yMin, yMax, Math.random());
+        const x = THREE.MathUtils.lerp(x_min, x_max, Math.random());
+        const z = z_front_world;
+        const y = THREE.MathUtils.lerp(y_min, y_max, Math.random());
 
         const p = new THREE.Vector3(x, y, z);
         points.push(p);
@@ -58,7 +62,7 @@ export function add_box_random_points(num_strands) {
     const sphereGeo = new THREE.SphereGeometry(0.1, 8, 8);
     const sphereMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
     let sphere_guide = new THREE.Mesh(sphereGeo, sphereMat);
-    sphere_guide.position.z = zFrontWorld;
+    sphere_guide.position.z = z_front_world;
     sphere_guide.visible = false;
 
     let positions = []
@@ -66,8 +70,8 @@ export function add_box_random_points(num_strands) {
         positions.push(points[i].x, points[i].y, points[i].z)
     }
 
-    let ref_plane = draw_plane(boxWidth, boxHeight, zFrontWorld)
+    let ref_plane = draw_plane(box_width, box_height, z_front_world)
     
-    return [ ref_plane, boxMesh, sphere_guide, positions ]
+    return [ ref_plane, box_mesh, sphere_guide, positions ]
 }
 

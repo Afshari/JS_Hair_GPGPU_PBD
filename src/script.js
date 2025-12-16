@@ -13,14 +13,15 @@ import { build_strand_node_uvs, build_strand_line_attributes } from './strand_ge
 /**
  * Scene Info
  */
-export const sceneInfo = {
+export const scene_info = {
     gravity: -30.0,
     dt: 0.01,
-    numSubSteps: 5,
+    num_sub_steps: 5,
     mass: 0.5,
     len: 0.25,
     angle: Math.PI,
-    num_strands: 31000
+    num_strands: 31000,
+    gpu_states: 8
 };
 
 /**
@@ -34,9 +35,13 @@ document.body.appendChild(stats.dom);
  */
 const sceneControl = {
     wind: 1.5,
+    reset_wind() {
+        sceneControl.wind = 0
+    }
 }
-const gui = new GUI({ width: 340 })
-gui.add(sceneControl, 'wind', -2, 2, 0.1).name('Wind');
+const gui = new GUI({ width: 250 })
+gui.add(sceneControl, 'wind', -2, 2, 0.1).name('Wind').listen();
+gui.add(sceneControl, "reset_wind").name("Reset");
 
 
 /**
@@ -49,13 +54,13 @@ const canvas = document.querySelector('canvas.webgl')
 const scene = new THREE.Scene()
 
 // Mouse
-let isMouseDown = false;
+let is_mouse_down = false;
 const mouse = new THREE.Vector2()
 window.addEventListener('mousedown', (event) => {
-    isMouseDown = true;
+    is_mouse_down = true;
 });
 window.addEventListener('mouseup', (event) => {
-    isMouseDown = false;
+    is_mouse_down = false;
 });
 window.addEventListener('mousemove', (event) => {
     mouse.x = event.clientX / sizes.width * 2 - 1
@@ -119,7 +124,7 @@ renderer.setPixelRatio(sizes.pixelRatio)
 /**
  * Geometry
  */
-let [ ref_plane, boxMesh, sphere_guide, positions ] = add_box_random_points(sceneInfo.num_strands)
+let [ ref_plane, boxMesh, sphere_guide, positions ] = add_box_random_points(scene_info.num_strands)
 scene.add(ref_plane)
 scene.add(boxMesh)
 scene.add(sphere_guide)
@@ -148,16 +153,16 @@ const baseStrandsTexture = gpgpu.computation.createTexture()
 
 
 let data = baseStrandsTexture.image.data
-data = populate_strand_node_texture(data, positions, baseGeometry, sceneInfo)
+data = populate_strand_node_texture(data, positions, baseGeometry, scene_info)
 
 // Strands variable
 gpgpu.strandsVariable = gpgpu.computation.addVariable('uStrands', gpgpuStrandsShader, baseStrandsTexture)
 gpgpu.computation.setVariableDependencies(gpgpu.strandsVariable, [gpgpu.strandsVariable])
 gpgpu.strandsVariable.material.uniforms.rootCount = new THREE.Uniform(baseGeometry.rootCount)
 gpgpu.strandsVariable.material.uniforms.state = new THREE.Uniform(0)
-gpgpu.strandsVariable.material.uniforms.dt = new THREE.Uniform(sceneInfo.dt)
-gpgpu.strandsVariable.material.uniforms.gravity = new THREE.Uniform(sceneInfo.gravity)
-gpgpu.strandsVariable.material.uniforms.len = new THREE.Uniform(sceneInfo.len)
+gpgpu.strandsVariable.material.uniforms.dt = new THREE.Uniform(scene_info.dt)
+gpgpu.strandsVariable.material.uniforms.gravity = new THREE.Uniform(scene_info.gravity)
+gpgpu.strandsVariable.material.uniforms.len = new THREE.Uniform(scene_info.len)
 gpgpu.strandsVariable.material.uniforms.rnd_wind = new THREE.Uniform(0)
 gpgpu.strandsVariable.material.uniforms.isMouseDown = new THREE.Uniform(false)
 gpgpu.strandsVariable.material.uniforms.guide = new THREE.Vector3(0, 0, 0.5)
@@ -212,16 +217,16 @@ const tick = () => {
     if(intersects.length > 0) {
         sphere_guide.position.copy(intersects[0].point);
     } else {
-        isMouseDown = false
+        is_mouse_down = false
     }
 
     // const elapsedTime = clock.getElapsedTime()
     // const deltaTime = elapsedTime - previousTime
     // previousTime = elapsedTime
 
-    gpgpu.strandsVariable.material.uniforms.dt.value = sceneInfo.dt
+    gpgpu.strandsVariable.material.uniforms.dt.value = scene_info.dt
     gpgpu.strandsVariable.material.uniforms.rnd_wind.value = (Math.random() * sceneControl.wind);
-    gpgpu.strandsVariable.material.uniforms.isMouseDown.value = isMouseDown
+    gpgpu.strandsVariable.material.uniforms.isMouseDown.value = is_mouse_down
     gpgpu.strandsVariable.material.uniforms.guide.value = sphere_guide.position;
 
     // Update controls
@@ -229,7 +234,7 @@ const tick = () => {
 
     // GPGPU Update
     state = 0
-    for (var i = 0, state = 0; i < 8; i++, state++) {
+    for (var i = 0, state = 0; i < scene_info.gpu_states; i++, state++) {
         gpgpu.strandsVariable.material.uniforms.state.value = state
         gpgpu.computation.compute()
     }
