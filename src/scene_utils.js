@@ -4,6 +4,7 @@ import * as THREE from 'three'
 // [ ] - Add labels for strands & particles in lil-gui
 // [ ] - limit framerate
 // [ ] - Add text for help/guide in lil-gui
+// [ ] - Add TOC to the README
 
 function draw_plane(p_width, p_height, z_front_world) {
 

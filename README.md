@@ -1,8 +1,30 @@
 # JavaScript Fur/Hair Simulation with GPGPU & PBD Physics
 
-## Demo
+---
 
-*(To be added – YouTube Short & Live Demo)*
+## Table of Contents
+
+## Table of Contents
+- [JavaScript Fur/Hair Simulation with GPGPU \& PBD Physics](#javascript-furhair-simulation-with-gpgpu--pbd-physics)
+  - [Table of Contents](#table-of-contents)
+  - [Table of Contents](#table-of-contents-1)
+  - [Video](#video)
+  - [Key Features](#key-features)
+  - [Technologies](#technologies)
+  - [Technical Overview](#technical-overview)
+  - [Performance Notes](#performance-notes)
+  - [Project Structure](#project-structure)
+  - [How to Run](#how-to-run)
+  - [Background \& Credits](#background--credits)
+  - [Future Improvements](#future-improvements)
+  - [Author](#author)
+
+
+---
+
+## Video
+
+[Video](https://www.youtube.com/watch?v=nm2NeTOQWpk)
 
 ---
 
