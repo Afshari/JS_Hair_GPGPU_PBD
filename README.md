@@ -3,11 +3,8 @@
 ---
 
 ## Table of Contents
-
-## Table of Contents
 - [JavaScript Fur/Hair Simulation with GPGPU \& PBD Physics](#javascript-furhair-simulation-with-gpgpu--pbd-physics)
   - [Table of Contents](#table-of-contents)
-  - [Table of Contents](#table-of-contents-1)
   - [Video](#video)
   - [Key Features](#key-features)
   - [Technologies](#technologies)
